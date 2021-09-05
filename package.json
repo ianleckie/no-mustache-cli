@@ -1,0 +1,15 @@
+{
+  "name": "no-mustache-cli",
+  "version": "1.0.0",
+  "description": "A simple node.js-based tool for processing data stored in a Google spreadsheet",
+  "main": "NoMustache.js",
+  "author": "Ian Leckie",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "googleapis": "^85.0.0",
+    "mustache": "^4.2.0",
+    "path": "^0.12.7",
+    "readline": "^1.3.0"
+  }
+}
