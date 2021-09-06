@@ -3,40 +3,31 @@
  * NoMustache
  * 
  * A simple tool for processing data stored in a Google spreadsheet through
- * a Moustache-based HTML template. Outputs an HTML file for each row or
+ * a Mustache-based HTML template. Outputs an HTML file for each row or
  * column of data as specifed by user input.
  * 
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs       = require('fs');
+const path     = require('path');
 const mustache = require('mustache');
 const readline = require('readline').createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
-const {google} = require('googleapis');
 
+const {google}     = require('googleapis');
+const SCOPES       = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const TOKEN_PATH   = 'token.json';
 const templatePath = path.join('.', 'template', 'template.html');
 
-// If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
-
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = 'token.json';
-
-// set up template & date for later
-var template = getTemplate();
-
-var date = new Date();
+var template   = getTemplate();
+var date       = new Date();
 var dateString = date.getTime().toString();
 
-// Load client secrets from a local file.
+// Authorization flow
 fs.readFile('credentials.json', (err, content) => {
 	if (err) return console.log('Error loading client secret file:', err);
-	// Authorize a client with credentials, then call the Google Sheets API.
 	authorize(JSON.parse(content), getUserInput);
 });
 
@@ -74,7 +65,7 @@ function authorize(credentials, callback) {
 	const oAuth2Client = new google.auth.OAuth2(
 			client_id, client_secret, redirect_uris[0]);
 
-	// Check if we have previously stored a token.
+	// Check if we have previously stored a token. Get one if not.
 	fs.readFile(TOKEN_PATH, (err, token) => {
 		if (err) return getNewToken(oAuth2Client, callback);
 		oAuth2Client.setCredentials(JSON.parse(token));
